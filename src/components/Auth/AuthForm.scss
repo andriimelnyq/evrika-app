@@ -1,0 +1,35 @@
+@import "../../styles/main";
+
+.auth-form {
+  padding-top: 80px;
+
+  &__content {
+    display: flex;
+    justify-content: space-evenly;
+    gap: 80px;
+  }
+
+  &__img img {
+    width: 500px;
+    height: 500px;
+    object-fit: cover;
+    border-radius: 30px;
+  }
+
+  &__main {
+    width: 550px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  &__control {
+    width: 330px;
+    height: 60px;
+    background-color: $cyanLight;
+    border-radius: 33px;
+    display: flex;
+    justify-content: space-evenly;
+    align-self: center;
+  }
+}

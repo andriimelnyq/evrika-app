@@ -1,0 +1,27 @@
+@import "../../styles/main";
+
+.banner {
+  min-width: max-content;
+  background-color: $cyan;
+  min-height: 600px;
+  border-radius: 0 0 50% 50% / 100px;
+  overflow: hidden;
+
+  &__content {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__info {
+    width: 600px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    justify-content: center;
+    padding-bottom: 100px;
+  }
+
+  &__img img {
+    height: 600px;
+  }
+}
