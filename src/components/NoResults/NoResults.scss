@@ -1,0 +1,14 @@
+@import "../../styles/main";
+
+.no-results {
+  text-transform: uppercase;
+  color: $orange;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &--list {
+    align-items: start;
+    grid-column: 2 /3;
+  }
+}

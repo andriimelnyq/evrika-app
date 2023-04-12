@@ -1,15 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import { User } from '../types/User';
-// import { AuthForm } from '../components/Auth/AuthForm';
+import React, { useEffect, useContext } from 'react';
+import { useLocalStorage } from './useLocaleStorage';
+import { postRefreshToken } from './api';
+import { ErrorText } from '../types/ErrorText';
+import { ErrorContext } from './ErrorContext';
 
-type UserContextType = {
-  user: User | null,
-  setUser: (user: User | null) => void,
+interface Tokens {
+  access: string,
+  refresh: string,
+}
+
+type TokenContextType = {
+  tokens: Tokens,
+  setTokens: (tokens: Tokens) => void,
 };
 
-export const UserContext = React.createContext<UserContextType>({
-  user: null,
-  setUser: () => {},
+export const TokenContext = React.createContext<TokenContextType>({
+  tokens: {
+    access: '',
+    refresh: '',
+  },
+  setTokens: () => {},
 });
 
 type Props = {
@@ -17,29 +27,40 @@ type Props = {
 };
 
 export const LocaleStorageProvider = ({ children }: Props) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [tokens, setTokens] = useLocalStorage('tokens');
+  const { setError } = useContext(ErrorContext);
+  const { refresh } = tokens;
+
+  const handleRefreshToken = async () => {
+    if (refresh) {
+      try {
+        const response = await postRefreshToken(refresh);
+
+        setTokens({
+          access: response.access,
+          refresh: response.refresh,
+        });
+      } catch {
+        setError(ErrorText.REFRESH_TOKEN);
+      }
+    }
+  };
 
   useEffect(() => {
-    const data = localStorage.getItem('user');
+    const intervalId = setInterval(() => {
+      handleRefreshToken();
+    }, 15 * 1000);
 
-    if (data !== null) {
-      const curentUser = JSON.parse(data) as User;
-
-      setUser(curentUser);
-    }
-  }, []);
-
-  // if (!user) {
-  //   return (<AuthForm setUser={setUser} />);
-  // }
+    return () => clearInterval(intervalId);
+  }, [tokens]);
 
   return (
-    <UserContext.Provider value={{
-      user,
-      setUser,
+    <TokenContext.Provider value={{
+      tokens,
+      setTokens,
     }}
     >
       {children}
-    </UserContext.Provider>
+    </TokenContext.Provider>
   );
 };

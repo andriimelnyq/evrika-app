@@ -1,0 +1,22 @@
+@import "../../styles/main";
+
+.course-card {
+  width: 250px;
+  height: 250px;
+  padding: 15px 10px 5px 10px;
+
+  &.MuiPaper-root {
+    border-radius: 33px;
+  }
+
+  &__row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__button.MuiButton-root.MuiButtonBase-root {
+    border-radius: 33px;
+    @include hover(color $orange);
+  }
+}

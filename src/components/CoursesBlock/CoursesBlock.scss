@@ -1,0 +1,17 @@
+.courses-block {
+  background-color: #F1F1F1;
+  padding-top: 40px;
+  min-width: min-content;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+  }
+
+  &__main {
+    display: flex;
+    justify-content: space-between;
+  }
+}

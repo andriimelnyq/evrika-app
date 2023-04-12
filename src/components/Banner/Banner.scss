@@ -5,6 +5,7 @@
   background-color: $cyan;
   min-height: 600px;
   border-radius: 0 0 50% 50% / 100px;
+  border-bottom: 2px solid $orange;
   overflow: hidden;
 
   &__content {

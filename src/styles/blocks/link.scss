@@ -1,0 +1,14 @@
+.link {
+  text-decoration: none;
+  text-transform: uppercase;
+  padding: 20px 10px;
+  color: white;
+
+  @include hover(color $grey, transform scale(1.1));
+
+  &--onpage {
+    color: $cyan;
+    text-transform: none;
+    font-size: 25px;
+  }
+}

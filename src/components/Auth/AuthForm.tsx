@@ -1,14 +1,79 @@
-import React, { useState, useContext } from 'react';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import { LoginForm } from './LoginForm';
-import { RegisterForm } from './RegisterForm';
-import { UserContext } from '../../helpers/LocaleStorageContext';
+import React, { FormEvent, useState, useContext } from 'react';
+import validator from 'validator';
+import {
+  TextField, Button, Typography, CircularProgress,
+} from '@mui/material';
+import { TokenContext } from '../../helpers/LocaleStorageContext';
+import { ErrorContext } from '../../helpers/ErrorContext';
+import { ErrorText } from '../../types/ErrorText';
+import { postLogin, postRegister } from '../../helpers/api';
+import './Form.scss';
 import './AuthForm.scss';
 
 export const AuthForm = () => {
   const [needToRegister, setNeedToRegister] = useState(false);
-  const { setUser } = useContext(UserContext);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const isValidateEmail = validator.isEmail(email);
+  const isValidatePassword = validator.isByteLength(password, { min: 6 });
+  const isValidateFirstName = validator.isByteLength(firstName, { min: 4 });
+  const isValidateLastName = validator.isByteLength(lastName, { min: 4 });
+  const { setTokens } = useContext(TokenContext);
+  const { setError } = useContext(ErrorContext);
+
+  const handleEmailChange = (event: { target: { value: string }; }) => {
+    setEmail(event.target.value.trim());
+  };
+
+  const handlePasswordChange = (event: { target: { value: string }; }) => {
+    setPassword(event.target.value.trim());
+  };
+
+  const handleFirstNameChange = (event: { target: { value: string }; }) => {
+    setFirstName(event.target.value.trim());
+  };
+
+  const handleLastNameChange = (event: { target: { value: string }; }) => {
+    setLastName(event.target.value.trim());
+  };
+
+  const handleBack = () => window.history.back();
+
+  const handleSubmitLogin = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try {
+      setIsLoading(true);
+      const response = await postLogin(email, password);
+      const { access, refresh } = response.data;
+
+      setTokens({
+        access, refresh,
+      });
+      handleBack();
+    } catch {
+      setError(ErrorText.LOGIN);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSubmitRegister = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try {
+      setIsLoading(true);
+      await postRegister(email, password, firstName, lastName);
+      await handleSubmitLogin(e);
+    } catch {
+      setError(ErrorText.REGISTRATION);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <section
@@ -55,9 +120,91 @@ export const AuthForm = () => {
               </Button>
             </div>
 
-            {needToRegister
-              ? (<RegisterForm setUser={setUser} />)
-              : (<LoginForm setUser={setUser} />)}
+            {isLoading
+              ? (
+                <CircularProgress
+                  sx={{
+                    margin: 'auto',
+                  }}
+                />
+              )
+              : (
+                <form
+                  className="form"
+                  onSubmit={e => (!needToRegister ? handleSubmitLogin(e) : handleSubmitRegister(e))}
+                >
+                  <TextField
+                    error={!isValidateEmail && email !== ''}
+                    label="Ел. пошта"
+                    variant="outlined"
+                    className="text-field"
+                    value={email}
+                    required
+                    onChange={handleEmailChange}
+                  />
+
+                  <TextField
+                    label="Пароль"
+                    variant="outlined"
+                    className="text-field"
+                    value={password}
+                    required
+                    type="password"
+                    error={!isValidatePassword && password !== ''}
+                    onChange={handlePasswordChange}
+                  />
+
+                  {needToRegister && (
+                    <>
+                      <TextField
+                        label="Ім'я"
+                        variant="outlined"
+                        className="text-field"
+                        value={firstName}
+                        required
+                        error={!isValidateFirstName && firstName !== ''}
+                        onChange={handleFirstNameChange}
+                      />
+                      <TextField
+                        label="Прізвище"
+                        variant="outlined"
+                        className="text-field"
+                        value={lastName}
+                        required
+                        error={!isValidateLastName && lastName !== ''}
+                        onChange={handleLastNameChange}
+                      />
+
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        className="button"
+                        type="submit"
+                        disabled={
+                          !isValidateEmail
+                        || !isValidateFirstName
+                        || !isValidateLastName
+                        || !isValidatePassword
+                        }
+                      >
+                        Зареєструватись
+                      </Button>
+                    </>
+                  )}
+
+                  {!needToRegister && (
+                    <Button
+                      variant="contained"
+                      className="button"
+                      color="primary"
+                      disabled={!isValidateEmail || !isValidatePassword}
+                      type="submit"
+                    >
+                      Увійти
+                    </Button>
+                  )}
+                </form>
+              )}
           </div>
         </div>
       </div>

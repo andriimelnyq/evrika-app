@@ -2,16 +2,21 @@ import { Link } from 'react-router-dom';
 import React, { useContext } from 'react';
 import { Button } from '@mui/material';
 import { NavLinks } from '../../types/NavLinks';
+import { TokenContext } from '../../helpers/LocaleStorageContext';
 import './Header.scss';
-import { UserContext } from '../../helpers/LocaleStorageContext';
+
+interface Tokens {
+  access: string,
+  refresh: string,
+}
 
 export const Header = () => {
   const navLinks = Object.keys(NavLinks);
   const navLinksHeader = Object.values(NavLinks);
-  const { user, setUser } = useContext(UserContext);
+  const { tokens, setTokens } = useContext(TokenContext);
   const handleLogOut = () => {
-    localStorage.removeItem('user');
-    setUser(null);
+    setTokens({} as Tokens);
+    localStorage.removeItem('tokens');
   };
 
   return (
@@ -35,14 +40,14 @@ export const Header = () => {
           <Link
             to={link}
             key={link}
-            className="header__link"
+            className="link"
           >
             {navLinksHeader[i]}
           </Link>
         ))}
       </div>
 
-      {user
+      {tokens.access
         ? (
           <Button
             variant="contained"

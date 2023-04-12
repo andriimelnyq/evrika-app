@@ -7,7 +7,10 @@ import { Route, Routes } from 'react-router';
 import { App } from './App';
 import { HomePage } from './pages/HomePage';
 import { LocaleStorageProvider } from './helpers/LocaleStorageContext';
+import { CoursesProvider } from './helpers/CoursesContext';
+import { ErrorProvider } from './helpers/ErrorContext';
 import { AuthForm } from './components/Auth/AuthForm';
+import { CoursesPage } from './pages/CoursesPage';
 
 const theme = createTheme({
   palette: {
@@ -30,18 +33,24 @@ const theme = createTheme({
 ReactDOM.render(
   <ThemeProvider theme={theme}>
     <React.StrictMode>
-      <LocaleStorageProvider>
-        <HashRouter>
-          <Routes>
-            <Route path="/" element={<App />}>
-              <Route path="home" element={<Navigate to="/" replace />} />
-              <Route index element={<HomePage />} />
+      <ErrorProvider>
+        <LocaleStorageProvider>
+          <CoursesProvider>
+            <HashRouter>
+              <Routes>
+                <Route path="/" element={<App />}>
+                  <Route path="home" element={<Navigate to="/" replace />} />
+                  <Route index element={<HomePage />} />
 
-              <Route path="auth" element={<AuthForm />} />
-            </Route>
-          </Routes>
-        </HashRouter>
-      </LocaleStorageProvider>
+                  <Route path="auth" element={<AuthForm />} />
+
+                  <Route path="courses" element={<CoursesPage />} />
+                </Route>
+              </Routes>
+            </HashRouter>
+          </CoursesProvider>
+        </LocaleStorageProvider>
+      </ErrorProvider>
     </React.StrictMode>
   </ThemeProvider>,
   document.getElementById('root'),

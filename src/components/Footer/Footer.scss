@@ -1,0 +1,17 @@
+@import "../../styles/main";
+
+.footer {
+  min-width: 1208px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-top: 2px solid $orange;
+  background-color: $cyan;
+  padding-top: 15px;
+
+  &__links {
+    display: flex;
+    gap: 80px;
+    align-items: center;
+  }
+}
