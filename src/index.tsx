@@ -11,6 +11,7 @@ import { CoursesProvider } from './helpers/CoursesContext';
 import { ErrorProvider } from './helpers/ErrorContext';
 import { AuthForm } from './components/Auth/AuthForm';
 import { CoursesPage } from './pages/CoursesPage';
+import { CourseDetailsPage } from './pages/CourseDetailsPage';
 
 const theme = createTheme({
   palette: {
@@ -45,6 +46,10 @@ ReactDOM.render(
                   <Route path="auth" element={<AuthForm />} />
 
                   <Route path="courses" element={<CoursesPage />} />
+                  <Route
+                    path="courses/:courseId"
+                    element={<CourseDetailsPage />}
+                  />
                 </Route>
               </Routes>
             </HashRouter>

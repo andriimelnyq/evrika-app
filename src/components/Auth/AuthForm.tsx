@@ -1,8 +1,10 @@
 import React, { FormEvent, useState, useContext } from 'react';
 import validator from 'validator';
 import {
-  TextField, Button, Typography, CircularProgress,
+  TextField, Button, Typography, CircularProgress, InputAdornment, IconButton,
 } from '@mui/material';
+import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
+import VisibilityOffOutlinedIcon from '@mui/icons-material/VisibilityOffOutlined';
 import { TokenContext } from '../../helpers/LocaleStorageContext';
 import { ErrorContext } from '../../helpers/ErrorContext';
 import { ErrorText } from '../../types/ErrorText';
@@ -17,6 +19,7 @@ export const AuthForm = () => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isVisiblePassword, setIsVisiblePassword] = useState(false);
   const isValidateEmail = validator.isEmail(email);
   const isValidatePassword = validator.isByteLength(password, { min: 6 });
   const isValidateFirstName = validator.isByteLength(firstName, { min: 4 });
@@ -149,9 +152,29 @@ export const AuthForm = () => {
                     className="text-field"
                     value={password}
                     required
-                    type="password"
+                    type={isVisiblePassword ? 'text' : 'password'}
                     error={!isValidatePassword && password !== ''}
                     onChange={handlePasswordChange}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment
+                          position="end"
+                          sx={{
+                            paddingRight: '10px',
+                          }}
+                        >
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={() => setIsVisiblePassword(!isVisiblePassword)}
+                            edge="end"
+                          >
+                            {isVisiblePassword
+                              ? <VisibilityOutlinedIcon />
+                              : <VisibilityOffOutlinedIcon />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
                   />
 
                   {needToRegister && (

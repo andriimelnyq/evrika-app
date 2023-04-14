@@ -11,12 +11,20 @@
 
   &__row {
     display: flex;
-    justify-content: space-between;
+    gap: 10px;
     align-items: center;
   }
 
   &__button.MuiButton-root.MuiButtonBase-root {
     border-radius: 33px;
+    @include hover(color $orange);
+  }
+
+  &__button-link {
+    text-decoration: none;
+    color: $cyan;
+    padding: 10px;
+
     @include hover(color $orange);
   }
 }

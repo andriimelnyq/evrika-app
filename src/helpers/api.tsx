@@ -5,6 +5,9 @@ const BASE_URL = 'https://evrika-rpkv.onrender.com/api/';
 export const getCourses = () => axios.get(`${BASE_URL}catalog/courses/`)
   .then(response => response.data.results);
 
+export const getCourseDetails = (id: string) => axios.get(`${BASE_URL}catalog/courses/${id}/`)
+  .then(response => response.data);
+
 export const getCoursesBySchool = (isSchool: string) => axios.get(`${BASE_URL}catalog/courses/?school_subject=${isSchool}`)
   .then(response => response.data.results);
 

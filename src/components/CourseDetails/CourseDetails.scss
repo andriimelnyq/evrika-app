@@ -1,0 +1,52 @@
+@import "../../styles/main";
+
+.course-details {
+  &__content {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__img img {
+    width: 400px;
+    height: 400px;
+    object-fit: cover;
+    overflow: hidden;
+    border-radius: 30px;
+    background-color: $cyan;
+  }
+
+  &__main{
+    width: 600px;
+    display: flex;
+    justify-content: space-evenly;
+    flex-direction: column;
+  }
+
+  &__description {
+    text-align: justify;
+  }
+
+  &__items {
+    display: flex;
+    justify-content: space-between;
+    gap: 50px;
+  }
+
+  &__rows {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  &__row {
+    width: 280px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__control {
+    width: 100%;
+    align-self: flex-end;
+  }
+}

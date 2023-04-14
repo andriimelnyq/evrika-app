@@ -22,6 +22,7 @@
   }
 
   &__items {
+    margin-bottom: 30px;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-gap: 30px 16px;

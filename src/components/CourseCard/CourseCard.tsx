@@ -1,6 +1,7 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import {
-  Button, Card, CardActions, CardContent, Typography,
+  Card, CardActions, CardContent, Typography,
 } from '@mui/material';
 import { Course } from '../../types/Course';
 import './CourseCard.scss';
@@ -11,7 +12,7 @@ type Props = {
 
 export const CourseCard: React.FC<Props> = ({ course }) => {
   const {
-    title, duration, age_of_pupils, price,
+    id, title, duration, age_of_pupils, price,
   } = course;
 
   return (
@@ -39,7 +40,7 @@ export const CourseCard: React.FC<Props> = ({ course }) => {
 
         <div className="course-card__row">
           <Typography variant="body2">
-            Вартість за заняття -
+            Вартість за курс:
           </Typography>
 
           <Typography color="text.secondary">
@@ -48,12 +49,23 @@ export const CourseCard: React.FC<Props> = ({ course }) => {
         </div>
       </CardContent>
       <CardActions>
-        <Button
+        {/* <Button
           className="course-card__button"
           size="small"
         >
+          <Link
+            to={`../courses/${id}`}
+            className="course-card__button-link"
+          >
+            Детальніше
+          </Link>
+        </Button> */}
+        <Link
+          to={`../courses/${id}`}
+          className="course-card__button-link"
+        >
           Детальніше
-        </Button>
+        </Link>
       </CardActions>
     </Card>
   );

@@ -26,15 +26,11 @@ export const CoursesList = () => {
   const [isLoad, setIsLoad] = useState(false);
   const [isMounted, setIsMounted] = useState(true);
 
-  const minPrice = searchParams.get('minPrice') || '300';
-  const maxPrice = searchParams.get('maxPrice') || '1000';
-  const [price, setPrice] = React.useState<number[]>([+minPrice, +maxPrice]);
-
-  const minDuration = searchParams.get('minDuration') || 2;
-  const maxDuration = searchParams.get('maxDuration') || 10;
+  const minDuration = searchParams.get('minDuration') || 1;
+  const maxDuration = searchParams.get('maxDuration') || 12;
   const [duration, setDuration] = React.useState<number[]>([+minDuration, +maxDuration]);
 
-  const minAge = searchParams.get('minAge') || 6;
+  const minAge = searchParams.get('minAge') || 7;
   const maxAge = searchParams.get('maxAge') || 18;
   const [age, setAge] = React.useState<number[]>([+minAge, +maxAge]);
 
@@ -43,9 +39,7 @@ export const CoursesList = () => {
 
   const visibleCourses = (filteredCourses.length > 0
     ? filteredCourses : coursesFromServer).filter(course => (
-    +course.price >= +minPrice
-      && +course.price <= +maxPrice
-      && +course.duration >= +minDuration
+    +course.duration >= +minDuration
       && +course.duration <= +maxDuration
       && +course.age_of_pupils >= +minAge
       && +course.age_of_pupils <= +maxAge
@@ -68,8 +62,6 @@ export const CoursesList = () => {
   const handleOnChangeSearchParams = () => {
     setSearchParams(
       getSearchWith(searchParams, {
-        minPrice: `${price[0]}` || null,
-        maxPrice: `${price[1]}` || null,
         minDuration: `${duration[0]}` || null,
         maxDuration: `${duration[1]}` || null,
         minAge: `${age[0]}` || null,
@@ -179,22 +171,15 @@ export const CoursesList = () => {
                 <FilterSlider
                   values={duration}
                   setValues={setDuration}
-                  minMax={[0, 12]}
+                  minMax={[1, 12]}
                   title="Тривалість, місяці"
                 />
 
                 <FilterSlider
                   values={age}
                   setValues={setAge}
-                  minMax={[3, 21]}
+                  minMax={[7, 18]}
                   title="Вік, роки"
-                />
-
-                <FilterSlider
-                  values={price}
-                  setValues={setPrice}
-                  minMax={[200, 1500]}
-                  title="Вартість, гривні"
                 />
 
                 <Button
@@ -214,20 +199,22 @@ export const CoursesList = () => {
                 </Button>
               </div>
 
-              <div className="courses-list__items">
-                {coursesOnPage.map(course => (
-                  <CourseCard
-                    course={course}
-                    key={course.title}
-                  />
-                ))}
+              <div className="courses-list__main-content">
+                <div className="courses-list__items">
+                  {coursesOnPage.map(course => (
+                    <CourseCard
+                      course={course}
+                      key={course.title}
+                    />
+                  ))}
 
-                {coursesOnPage.length === 0 && (
-                  <NoResults
-                    text="Нічого не знайдено"
-                    listModificator
-                  />
-                )}
+                  {coursesOnPage.length === 0 && (
+                    <NoResults
+                      text="Нічого не знайдено"
+                      listModificator
+                    />
+                  )}
+                </div>
 
                 {visibleCourses.length > 3 && (
                   <Pagination
