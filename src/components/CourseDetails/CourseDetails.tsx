@@ -60,7 +60,7 @@ export const CourseDetails: React.FC<Props> = ({ details }) => {
 
         <div className="course-details__content">
           <div className="course-details__img">
-            <img src="https://drive.google.com/uc?id=1Br7cD3skh37qo8-Bf36Gyi6jqvYahWqJ" alt="course img" />
+            <img src={details?.image} alt="course img" />
           </div>
 
           <div className="course-details__main">
