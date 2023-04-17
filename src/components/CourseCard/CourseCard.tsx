@@ -1,16 +1,18 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import {
-  Card, CardActions, CardContent, Typography,
+  Button, Card, CardActions, CardContent, Typography,
 } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import { Course } from '../../types/Course';
 import './CourseCard.scss';
 
 type Props = {
   course: Course,
+  handleDelete?: (course: Course) => void,
 };
 
-export const CourseCard: React.FC<Props> = ({ course }) => {
+export const CourseCard: React.FC<Props> = ({ course, handleDelete }) => {
   const {
     id, title, duration, age_of_pupils, price,
   } = course;
@@ -49,23 +51,21 @@ export const CourseCard: React.FC<Props> = ({ course }) => {
         </div>
       </CardContent>
       <CardActions>
-        {/* <Button
-          className="course-card__button"
-          size="small"
-        >
-          <Link
-            to={`../courses/${id}`}
-            className="course-card__button-link"
-          >
-            Детальніше
-          </Link>
-        </Button> */}
         <Link
           to={`../courses/${id}`}
           className="course-card__button-link"
         >
           Детальніше
         </Link>
+
+        {handleDelete && (
+          <Button
+            onClick={() => handleDelete(course)}
+            className="course-card__delete"
+          >
+            <CloseIcon />
+          </Button>
+        )}
       </CardActions>
     </Card>
   );

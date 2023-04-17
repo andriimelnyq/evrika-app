@@ -3,7 +3,8 @@
 .course-details {
   &__content {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
+    gap: 100px;
   }
 
   &__img img {
@@ -20,6 +21,7 @@
     display: flex;
     justify-content: space-evenly;
     flex-direction: column;
+    gap: 20px;
   }
 
   &__description {

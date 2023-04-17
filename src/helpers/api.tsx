@@ -2,8 +2,27 @@ import axios from 'axios';
 
 const BASE_URL = 'https://evrika-rpkv.onrender.com/api/';
 
-export const getCourses = () => axios.get(`${BASE_URL}catalog/courses/`)
-  .then(response => response.data.results);
+export const getCourses = async () => {
+  const response = await axios.get(`${BASE_URL}catalog/courses/`);
+  let result = [...response.data.results];
+
+  if (response.data.count <= 10) {
+    return result;
+  }
+
+  const getNext = async (url: string) => {
+    const res = await axios.get(url);
+
+    result = [...result, ...res.data.results];
+    if (res.data.next !== null) {
+      await getNext(res.data.next);
+    }
+  };
+
+  await getNext(response.data.next);
+
+  return result;
+};
 
 export const getCourseDetails = (id: string) => axios.get(`${BASE_URL}catalog/courses/${id}/`)
   .then(response => response.data);
@@ -28,14 +47,14 @@ export const postRegister = (
   password,
 });
 
-export const postRefreshToken = async (refresh: string) => (
-  fetch(`${BASE_URL}user/token/refresh/`, {
-    method: 'POST',
+export const postRefreshToken = (refresh: string) => (
+  axios.post(`${BASE_URL}user/token/refresh/`, { refresh }).then(res => res.data)
+);
+
+export const postOrder = (data: number[], token: string) => (
+  axios.post(`${BASE_URL}catalog/orders/`, { courses: data }, {
     headers: {
-      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({
-      refresh,
-    }),
-  }).then(res => res.json())
+  }).then(res => res.data)
 );

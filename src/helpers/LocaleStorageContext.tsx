@@ -3,10 +3,16 @@ import { useLocalStorage } from './useLocaleStorage';
 import { postRefreshToken } from './api';
 import { ErrorText } from '../types/ErrorText';
 import { ErrorContext } from './ErrorContext';
+import { CourseDetailsType } from '../types/CourseDetailsType';
 
 interface Tokens {
   access: string,
   refresh: string,
+}
+
+interface SelectedCoursesType {
+  selectedCourses: CourseDetailsType[],
+  setSelectedCourses: (selectedCourses: CourseDetailsType[]) => void,
 }
 
 type TokenContextType = {
@@ -22,12 +28,18 @@ export const TokenContext = React.createContext<TokenContextType>({
   setTokens: () => {},
 });
 
+export const SelectedCoursesContext = React.createContext<SelectedCoursesType>({
+  selectedCourses: [],
+  setSelectedCourses: () => {},
+});
+
 type Props = {
   children: React.ReactNode;
 };
 
 export const LocaleStorageProvider = ({ children }: Props) => {
   const [tokens, setTokens] = useLocalStorage('tokens');
+  const [selectedCourses, setSelectedCourses] = useLocalStorage('selectedCourses');
   const { setError } = useContext(ErrorContext);
   const { refresh } = tokens;
 
@@ -49,7 +61,7 @@ export const LocaleStorageProvider = ({ children }: Props) => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       handleRefreshToken();
-    }, 15 * 1000);
+    }, 5 * 60 * 1000);
 
     return () => clearInterval(intervalId);
   }, [tokens]);
@@ -60,7 +72,13 @@ export const LocaleStorageProvider = ({ children }: Props) => {
       setTokens,
     }}
     >
-      {children}
+      <SelectedCoursesContext.Provider value={{
+        selectedCourses,
+        setSelectedCourses,
+      }}
+      >
+        {children}
+      </SelectedCoursesContext.Provider>
     </TokenContext.Provider>
   );
 };

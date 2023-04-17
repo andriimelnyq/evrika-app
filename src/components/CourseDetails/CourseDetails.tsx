@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
   Breadcrumbs, Button, Link, Typography,
 } from '@mui/material';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { CourseDetailsType } from '../../types/CourseDetailsType';
+import { SelectedCoursesContext } from '../../helpers/LocaleStorageContext';
 import './CourseDetails.scss';
 
 type Props = {
@@ -12,6 +13,20 @@ type Props = {
 };
 
 export const CourseDetails: React.FC<Props> = ({ details }) => {
+  const { selectedCourses, setSelectedCourses } = useContext(SelectedCoursesContext);
+  const isAlreadeAdded = selectedCourses.some(course => (
+    course.id === details?.id
+  ));
+
+  const handleAddingToSelected = () => {
+    if (details) {
+      setSelectedCourses([
+        ...selectedCourses,
+        details,
+      ]);
+    }
+  };
+
   const breadcrumbs = [
     <Link underline="hover" key="1" color="inherit" href="/#/home">
       <HomeOutlinedIcon
@@ -109,7 +124,7 @@ export const CourseDetails: React.FC<Props> = ({ details }) => {
                   </Typography>
 
                   <Typography color="text.secondary">
-                    {details?.school_subject === true ? 'Шкільний предмет' : 'Нешкільний предмет'}
+                    {details?.school_subject === true ? 'Шкільний курс' : 'Позашкільний курс'}
                   </Typography>
                 </div>
 
@@ -127,14 +142,15 @@ export const CourseDetails: React.FC<Props> = ({ details }) => {
               <div className="course-details__control">
                 <Button
                   variant="contained"
-                  color="primary"
                   className="button"
+                  onClick={handleAddingToSelected}
+                  disabled={isAlreadeAdded}
                   sx={{
                     width: '100%',
                     backgroundColor: '#F48C06',
                   }}
                 >
-                  Додати в обрані
+                  {isAlreadeAdded ? 'Додано' : 'Додати в обрані'}
                 </Button>
               </div>
             </div>

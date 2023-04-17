@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import React, { useContext } from 'react';
 import { Button } from '@mui/material';
 import { NavLinks } from '../../types/NavLinks';
-import { TokenContext } from '../../helpers/LocaleStorageContext';
+import { TokenContext, SelectedCoursesContext } from '../../helpers/LocaleStorageContext';
 import './Header.scss';
 
 interface Tokens {
@@ -14,6 +14,7 @@ export const Header = () => {
   const navLinks = Object.keys(NavLinks);
   const navLinksHeader = Object.values(NavLinks);
   const { tokens, setTokens } = useContext(TokenContext);
+  const { selectedCourses } = useContext(SelectedCoursesContext);
   const handleLogOut = () => {
     setTokens({} as Tokens);
     localStorage.removeItem('tokens');
@@ -42,6 +43,11 @@ export const Header = () => {
             key={link}
             className="link"
           >
+            {selectedCourses.length > 0 && link === 'selected' && (
+              <div className="link__count-selected">
+                {selectedCourses.length}
+              </div>
+            )}
             {navLinksHeader[i]}
           </Link>
         ))}

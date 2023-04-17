@@ -27,4 +27,11 @@
 
     @include hover(color $orange);
   }
+
+  &__delete.MuiButtonBase-root {
+    @include hover(color $orange);
+
+    margin-left: 50px;
+    border-radius: 33px;
+  }
 }

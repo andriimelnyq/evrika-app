@@ -1,0 +1,34 @@
+@import "../../styles/main";
+
+.selected-page {
+  min-width: 1200px;
+  background-color: #F1F1F1;
+  flex-grow: 1;
+
+  &__content {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__items {
+    margin-bottom: 30px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 30px 16px;
+  }
+
+  &__info {
+    width: 250px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    border: 2px solid $orange;
+    border-radius: 33px;
+  }
+
+  &__amount {
+    color: $orange;
+  }
+}

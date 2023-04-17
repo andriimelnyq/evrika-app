@@ -9,9 +9,11 @@ import { HomePage } from './pages/HomePage';
 import { LocaleStorageProvider } from './helpers/LocaleStorageContext';
 import { CoursesProvider } from './helpers/CoursesContext';
 import { ErrorProvider } from './helpers/ErrorContext';
+import { NotificationProvider } from './helpers/NotificationContext';
 import { AuthForm } from './components/Auth/AuthForm';
 import { CoursesPage } from './pages/CoursesPage';
 import { CourseDetailsPage } from './pages/CourseDetailsPage';
+import { SelectedPage } from './pages/SelectedPage';
 
 const theme = createTheme({
   palette: {
@@ -34,28 +36,32 @@ const theme = createTheme({
 ReactDOM.render(
   <ThemeProvider theme={theme}>
     <React.StrictMode>
-      <ErrorProvider>
-        <LocaleStorageProvider>
-          <CoursesProvider>
-            <HashRouter>
-              <Routes>
-                <Route path="/" element={<App />}>
-                  <Route path="home" element={<Navigate to="/" replace />} />
-                  <Route index element={<HomePage />} />
+      <NotificationProvider>
+        <ErrorProvider>
+          <LocaleStorageProvider>
+            <CoursesProvider>
+              <HashRouter>
+                <Routes>
+                  <Route path="/" element={<App />}>
+                    <Route path="home" element={<Navigate to="/" replace />} />
+                    <Route index element={<HomePage />} />
 
-                  <Route path="auth" element={<AuthForm />} />
+                    <Route path="auth" element={<AuthForm />} />
 
-                  <Route path="courses" element={<CoursesPage />} />
-                  <Route
-                    path="courses/:courseId"
-                    element={<CourseDetailsPage />}
-                  />
-                </Route>
-              </Routes>
-            </HashRouter>
-          </CoursesProvider>
-        </LocaleStorageProvider>
-      </ErrorProvider>
+                    <Route path="courses" element={<CoursesPage />} />
+                    <Route
+                      path="courses/:courseId"
+                      element={<CourseDetailsPage />}
+                    />
+
+                    <Route path="selected" element={<SelectedPage />} />
+                  </Route>
+                </Routes>
+              </HashRouter>
+            </CoursesProvider>
+          </LocaleStorageProvider>
+        </ErrorProvider>
+      </NotificationProvider>
     </React.StrictMode>
   </ThemeProvider>,
   document.getElementById('root'),

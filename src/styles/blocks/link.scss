@@ -3,6 +3,7 @@
   text-transform: uppercase;
   padding: 20px 10px;
   color: white;
+  position: relative;
 
   @include hover(color $grey, transform scale(1.1));
 
@@ -10,5 +11,16 @@
     color: $cyan;
     text-transform: none;
     font-size: 25px;
+  }
+
+  &__count-selected {
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    position: absolute;
+    bottom: 30px;
+    left: 100%;
+    border-radius: 50%;
+    background-color: $orange;
   }
 }

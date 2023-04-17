@@ -1,9 +1,12 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, {
+  useCallback, useContext, useEffect, useState,
+} from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
   Breadcrumbs, Button, FormControl, InputLabel, Link, MenuItem,
-  Pagination, Select, SelectChangeEvent, Typography,
+  Pagination, Select, SelectChangeEvent, TextField, Typography,
 } from '@mui/material';
+import { debounce } from 'lodash';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import { Course } from '../../types/Course';
@@ -28,35 +31,58 @@ export const CoursesList = () => {
 
   const minDuration = searchParams.get('minDuration') || 1;
   const maxDuration = searchParams.get('maxDuration') || 12;
-  const [duration, setDuration] = React.useState<number[]>([+minDuration, +maxDuration]);
+  const [duration, setDuration] = useState<number[]>([+minDuration, +maxDuration]);
 
   const minAge = searchParams.get('minAge') || 7;
   const maxAge = searchParams.get('maxAge') || 18;
-  const [age, setAge] = React.useState<number[]>([+minAge, +maxAge]);
+  const [age, setAge] = useState<number[]>([+minAge, +maxAge]);
 
   const isSchool = searchParams.get('isSchool') || '';
-  const [isSchoolSubject, setIsSchoolSubject] = React.useState(isSchool);
+  const [isSchoolSubject, setIsSchoolSubject] = useState(isSchool);
 
-  const visibleCourses = (filteredCourses.length > 0
-    ? filteredCourses : coursesFromServer).filter(course => (
+  const page = searchParams.get('page') || '1';
+  const query = searchParams.get('query') || '';
+  const [queryValue, setQueryValue] = useState(query || '');
+
+  const visibleCourses = filteredCourses.filter(course => (
     +course.duration >= +minDuration
       && +course.duration <= +maxDuration
       && +course.age_of_pupils >= +minAge
       && +course.age_of_pupils <= +maxAge
+      && course.title.replace(/\s+/g, '').trim().toLocaleLowerCase().includes(query)
   ));
 
   const countPagination = Math.ceil(visibleCourses.length / 3);
-  const [pagePagination, setPagePagination] = useState(1);
-
   const coursesOnPage = visibleCourses
-    .slice(3 * (pagePagination - 1), 3 * (pagePagination - 1) + 3);
+    .slice(3 * (+page - 1), 3 * (+page - 1) + 3);
+
+  const applyQuery = useCallback(
+    debounce(setSearchParams, 1000),
+    [],
+  );
+
+  const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setQueryValue(e.target.value);
+    applyQuery(
+      getSearchWith(searchParams,
+        {
+          query: e.target.value.replace(/\s+/g, '')
+            .trim().toLocaleLowerCase() || null,
+          page: '1',
+        }),
+    );
+  };
 
   const handleChangeSchoolSub = (event: SelectChangeEvent) => {
     setIsSchoolSubject(event.target.value as string);
   };
 
   const handleChangePagination = (event: React.ChangeEvent<unknown>, value: number) => {
-    setPagePagination(value);
+    setSearchParams(
+      getSearchWith(searchParams, {
+        page: `${value}`,
+      }),
+    );
   };
 
   const handleOnChangeSearchParams = () => {
@@ -66,7 +92,8 @@ export const CoursesList = () => {
         maxDuration: `${duration[1]}` || null,
         minAge: `${age[0]}` || null,
         maxAge: `${age[1]}` || null,
-        isSchool: isSchoolSubject !== 'all' && isSchoolSubject !== '' ? isSchoolSubject : null,
+        isSchool: (isSchoolSubject !== 'all' && isSchoolSubject !== '') ? isSchoolSubject : null,
+        page: null,
       }),
     );
   };
@@ -74,13 +101,13 @@ export const CoursesList = () => {
   const handleResetSearchParams = () => (
     setSearchParams(
       getSearchWith(searchParams, {
-        minPrice: null,
-        maxPrice: null,
         minDuration: null,
         maxDuration: null,
         minAge: null,
         maxAge: null,
         isSchool: null,
+        page: null,
+        query: null,
       }),
     )
   );
@@ -88,9 +115,13 @@ export const CoursesList = () => {
   const loadFilteredCourses = async () => {
     setIsLoad(true);
     try {
-      const courses = await getCoursesBySchool(isSchool);
+      if (isSchool) {
+        const courses = await getCoursesBySchool(isSchool);
 
-      setFilteredCourses(courses);
+        setFilteredCourses(courses);
+      } else {
+        setFilteredCourses(coursesFromServer);
+      }
     } catch {
       setError(ErrorText.FILTER);
     } finally {
@@ -152,6 +183,14 @@ export const CoursesList = () => {
             </Typography>
             <div className="courses-list__content">
               <div className="courses-list__filter">
+                <TextField
+                  label="Пошук за назвою"
+                  variant="outlined"
+                  className="text-field"
+                  value={queryValue}
+                  onChange={handleChangeInput}
+                />
+
                 <FormControl fullWidth>
                   <InputLabel id="demo-simple-select-label">Тип курсу</InputLabel>
                   <Select
@@ -221,7 +260,7 @@ export const CoursesList = () => {
                     count={countPagination}
                     variant="outlined"
                     color="primary"
-                    page={pagePagination}
+                    page={+page}
                     className="pagination"
                     onChange={handleChangePagination}
                   />
