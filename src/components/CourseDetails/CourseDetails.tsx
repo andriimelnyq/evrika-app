@@ -2,10 +2,14 @@ import React, { useContext } from 'react';
 import {
   Breadcrumbs, Button, Link, Typography,
 } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+import HorizontalRuleIcon from '@mui/icons-material/HorizontalRule';
 import { CourseDetailsType } from '../../types/CourseDetailsType';
 import { SelectedCoursesContext } from '../../helpers/LocaleStorageContext';
+import { CoursesContext } from '../../helpers/CoursesContext';
 import './CourseDetails.scss';
 
 type Props = {
@@ -14,6 +18,8 @@ type Props = {
 
 export const CourseDetails: React.FC<Props> = ({ details }) => {
   const { selectedCourses, setSelectedCourses } = useContext(SelectedCoursesContext);
+  const { coursesFromServer } = useContext(CoursesContext);
+  const navigate = useNavigate();
   const isAlreadeAdded = selectedCourses.some(course => (
     course.id === details?.id
   ));
@@ -27,8 +33,16 @@ export const CourseDetails: React.FC<Props> = ({ details }) => {
     }
   };
 
-  const breadcrumbs = [
-    <Link underline="hover" key="1" color="inherit" href="/#/home">
+  const handleBackInHistory = () => navigate(-1);
+  const handleClickNextCourse = () => {
+    const max = coursesFromServer.length;
+    const randomIndex = Math.floor(Math.random() * max);
+
+    navigate(`/courses/${coursesFromServer[randomIndex].id}`);
+  };
+
+  const breadcrumbs1 = [
+    <Link title="Головна" underline="hover" key="1" color="inherit" href="/#/home">
       <HomeOutlinedIcon
         color="inherit"
         sx={{
@@ -53,18 +67,53 @@ export const CourseDetails: React.FC<Props> = ({ details }) => {
     </Typography>,
   ];
 
+  const breadcrumbs2 = [
+    <button
+      key="1"
+      type="button"
+      title="Повернутись назад"
+      className="breadcrumbs__button"
+      onClick={handleBackInHistory}
+    >
+      <NavigateBeforeIcon />
+      <Typography color="inherit">
+        Назад
+      </Typography>
+    </button>,
+    <button
+      key="2"
+      type="button"
+      title="Перейти на інший курс"
+      className="breadcrumbs__button"
+      onClick={handleClickNextCourse}
+    >
+      <Typography color="inherit">
+        Інший курс
+      </Typography>
+      <NavigateNextIcon />
+    </button>,
+  ];
+
   return (
     <section
       className="course-details"
     >
       <div className="container">
-        <Breadcrumbs
-          separator={<NavigateNextIcon fontSize="small" />}
-          aria-label="breadcrumb"
-          sx={{ marginTop: '30px' }}
-        >
-          {breadcrumbs}
-        </Breadcrumbs>
+        <div className="breadcrumbs">
+          <Breadcrumbs
+            separator={<NavigateNextIcon fontSize="small" />}
+            aria-label="breadcrumb"
+          >
+            {breadcrumbs1}
+          </Breadcrumbs>
+
+          <Breadcrumbs
+            separator={<HorizontalRuleIcon sx={{ transform: 'rotate(90deg)' }} />}
+            aria-label="breadcrumb"
+          >
+            {breadcrumbs2}
+          </Breadcrumbs>
+        </div>
 
         <Typography
           variant="h4"
@@ -75,7 +124,7 @@ export const CourseDetails: React.FC<Props> = ({ details }) => {
 
         <div className="course-details__content">
           <div className="course-details__img">
-            <img src={details?.image} alt="course img" />
+            <img src={details?.image_url} alt="course img" />
           </div>
 
           <div className="course-details__main">
@@ -83,11 +132,23 @@ export const CourseDetails: React.FC<Props> = ({ details }) => {
               variant="body2"
               className="course-details__description"
             >
+              <Typography
+                variant="h5"
+                sx={{ textAlign: 'left', color: '#F48C06', marginBottom: '8px' }}
+              >
+                Опис курсу
+              </Typography>
               {details?.description}
             </Typography>
 
             <div className="course-details__items">
               <div className="course-details__rows">
+                <Typography
+                  variant="h5"
+                  sx={{ textAlign: 'left', color: '#F48C06' }}
+                >
+                  Характеристика
+                </Typography>
                 <div className="course-details__row">
                   <Typography variant="body2">
                     Тривалість, місяці

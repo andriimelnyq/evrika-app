@@ -8,4 +8,5 @@ export interface CourseDetailsType {
   price: string,
   school_subject: boolean,
   image: string,
+  image_url: string,
 }

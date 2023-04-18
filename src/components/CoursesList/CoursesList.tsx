@@ -98,7 +98,11 @@ export const CoursesList = () => {
     );
   };
 
-  const handleResetSearchParams = () => (
+  const handleResetSearchParams = () => {
+    setDuration([1, 12]);
+    setAge([7, 18]);
+    setIsSchoolSubject('');
+    setQueryValue('');
     setSearchParams(
       getSearchWith(searchParams, {
         minDuration: null,
@@ -109,8 +113,8 @@ export const CoursesList = () => {
         page: null,
         query: null,
       }),
-    )
-  );
+    );
+  };
 
   const loadFilteredCourses = async () => {
     setIsLoad(true);
