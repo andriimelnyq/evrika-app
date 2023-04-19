@@ -30,7 +30,7 @@ export const Footer = () => {
         </Link>
       </div>
 
-      <p>© 2023 Mate Academy Inc.</p>
+      <p>© 2023 EVRYKA Inc.</p>
     </section>
   );
 };

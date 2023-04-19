@@ -34,6 +34,7 @@ export const FilterSlider:React.FC<Props> = ({
         <Typography
           sx={{
             width: '40px',
+            textAlign: 'right',
           }}
         >
           {values[1]}
