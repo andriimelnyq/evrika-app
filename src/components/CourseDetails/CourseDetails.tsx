@@ -134,7 +134,7 @@ export const CourseDetails: React.FC<Props> = ({ details }) => {
             >
               <Typography
                 variant="h5"
-                sx={{ textAlign: 'left', color: '#F48C06', marginBottom: '8px' }}
+                sx={{ textAlign: 'left', color: '#F88379', marginBottom: '8px' }}
               >
                 Опис курсу
               </Typography>
@@ -145,7 +145,7 @@ export const CourseDetails: React.FC<Props> = ({ details }) => {
               <div className="course-details__rows">
                 <Typography
                   variant="h5"
-                  sx={{ textAlign: 'left', color: '#F48C06' }}
+                  sx={{ textAlign: 'left', color: '#F88379' }}
                 >
                   Характеристика
                 </Typography>
@@ -208,7 +208,7 @@ export const CourseDetails: React.FC<Props> = ({ details }) => {
                   disabled={isAlreadeAdded}
                   sx={{
                     width: '100%',
-                    backgroundColor: '#F48C06',
+                    backgroundColor: '#F88379',
                   }}
                 >
                   {isAlreadeAdded ? 'Додано' : 'Додати в обрані'}

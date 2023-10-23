@@ -63,7 +63,7 @@ export const Header = () => {
               height: '75%',
               display: 'flex',
               alignSelf: 'center',
-              backgroundColor: '#F48C06',
+              backgroundColor: '#F88379',
             }}
             onClick={handleLogOut}
           >
@@ -79,7 +79,7 @@ export const Header = () => {
               height: '75%',
               display: 'flex',
               alignSelf: 'center',
-              backgroundColor: '#F48C06',
+              backgroundColor: '#F88379',
               padding: '0',
             }}
           >

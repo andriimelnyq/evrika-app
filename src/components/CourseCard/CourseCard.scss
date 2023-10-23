@@ -22,10 +22,10 @@
 
   &__button-link {
     text-decoration: none;
-    color: $cyan;
+    color: $orange;
     padding: 10px;
 
-    @include hover(color $orange);
+    @include hover(color $grey);
   }
 
   &__delete.MuiButtonBase-root {

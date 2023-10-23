@@ -10,7 +10,7 @@ export const Banner = () => {
           <div className="banner__info">
             <Typography
               variant="h3"
-              sx={{ color: '#F48C06' }}
+              sx={{ color: '#FFFFFF' }}
             >
               Навчатись ОНЛАЙН набагато легше!
             </Typography>

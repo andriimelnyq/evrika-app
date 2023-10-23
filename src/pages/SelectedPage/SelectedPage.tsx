@@ -107,7 +107,7 @@ export const SelectedPage = () => {
                         variant="contained"
                         className="button"
                         sx={{
-                          backgroundColor: '#F48C06',
+                          backgroundColor: '#F88379',
                         }}
                         onClick={handleOrder}
                       >
